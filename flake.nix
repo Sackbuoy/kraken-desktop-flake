@@ -13,12 +13,12 @@
       {
         packages.${system}.default = pkgs.stdenv.mkDerivation {
           pname = "kraken-desktop";
-          version = "0.2.1";
+          version = "0.0.1";
 
-          src = pkgs.fetchzip {
+          # this must be built with --impure since old versions are not
+          # available for download
+          src = builtins.fetchurl {
             url = "https://desktop-downloads.kraken.com/latest/kraken-x86_64-unknown-linux-gnu.zip";
-            sha256 = "sha256-dsymMzZuUfi2PIW9e1Liy08L1dQ32RZnsIY+q5uzYb0=";
-            stripRoot = false;
           };
 
           nativeBuildInputs = with pkgs; [
@@ -65,6 +65,12 @@
             libGL
           ];
 
+          unpackPhase = ''
+            mkdir source
+            cd source
+            ${pkgs.unzip}/bin/unzip $src
+          '';
+
           installPhase = ''
             mkdir -p $out/bin $out/share/applications $out/share/pixmaps
             
@@ -88,11 +94,12 @@
             [Desktop Entry]
             Name=Kraken Desktop
             Comment=Cryptocurrency trading platform
-            Exec=$out/bin/kraken-desktop
+            Exec=$out/bin/kraken-desktop %u
             Icon=kraken-desktop
             Type=Application
             Categories=Office;Finance;
             StartupWMClass=kraken-desktop
+            MimeType=x-scheme-handler/kraken;
             EOF
           '';
 
