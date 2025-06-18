@@ -85,6 +85,7 @@
             export XDG_SESSION_TYPE=wayland
             export QT_QPA_PLATFORM=wayland
             export GDK_BACKEND=wayland
+            export WGPU_BACKEN=vulkan
             exec $out/bin/kraken-desktop-bin "\$@"
             EOF
             chmod +x $out/bin/kraken-desktop
